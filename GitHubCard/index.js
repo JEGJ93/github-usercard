@@ -4,6 +4,8 @@
     https://api.github.com/users/<your name>
 */
 
+
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -28,7 +30,6 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +50,80 @@ const followersArray = [];
       </div>
     </div>
 */
+
+const cardMaker = (object) => {
+  const card = document.createElement('div');
+  const userImg = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const userName = document.createElement('p');
+  const userLocation = document.createElement('p');
+  const userProfile = document.createElement('p');
+  const userAddress = document.createElement('a');
+  const userFollowers = document.createElement('p');
+  const userFollowing = document.createElement('p');
+  const userBio = document.createElement('p');
+
+  card.classList.add('card')
+  cardInfo.classList.add('card-info')
+  name.classList.add('name')
+  userName.classList.add('username')
+
+  userImg.setAttribute('src', object.avatar_url);
+
+
+  name.textContent = object.name;
+  userName.textContent = object.login;
+  userLocation.textContent = `Location: ${object.location}`;
+  userProfile.textContent = 'Profile:';
+  userAddress.textContent = object.html_url;
+  userFollowers.textContent = `Followers: ${object.followers}`;
+  userFollowing.textContent = `Following: ${object.following}`;
+  userBio.textContent = object.bio;
+
+  card.appendChild(userImg);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(userLocation);
+  cardInfo.appendChild(userProfile);
+  userProfile.appendChild(userAddress);
+  cardInfo.appendChild(userFollowers);
+  cardInfo.appendChild(userFollowing);
+  cardInfo.appendChild(userBio);
+
+  return card;
+};
+
+const newCardMaker = document.querySelector('.cards');
+
+
+axios.get("https:api.github.com/users/JEGJ93")
+.then(response => {
+  console.log('api response', response)
+  newCardMaker.appendChild(cardMaker(response.data));
+})
+.catch(err => {
+  console.log('error', err)
+})
+
+
+
+const followersArray = [];
+
+followersArray.push('tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell');
+
+followersArray.forEach(names => {
+  axios.get('https:api.github.com/users/'+`${names}`)
+  .then(response => {
+    console.log('api response', response)
+    newCardMaker.appendChild(cardMaker(response.data));
+  })
+  .catch(err => {
+    console.log('error', err)
+  })
+});
+
 
 /*
   List of LS Instructors Github username's:
